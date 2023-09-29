@@ -1,15 +1,48 @@
 <!DOCTYPE html>
-<html>
-    <head>
-
-        <link rel="stylesheet">
+{% load static %}
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>{% block title %}Your Website Title{% endblock %}</title>
+    <link rel="stylesheet" href="{% static 'css/styles.css' %}">
+    
+</head>
+<body>
+    <header>
+        <nav>
+            <ul>
+                {% if user.is_authenticated %}
+                    {% if user.is_superuser %}
+                        <li><a href="{% url 'admin:index' %}">{{ user.get_username }}</a></li>
+                    {% endif %}
+                    {% comment %} <li><a href="{% url 'user_profile' %}">{{ user.get_username }}</a></li> {% endcomment %}
+                    <li><a href="{% url 'logout' %}">logout</a></li>
+                {% else %}
+                    <li><a href="{% url 'login' %}">login</a></li>
+                    <li><a href="{% url 'register' %}">register</a></li>
+                {% endif %}
+                
+            </ul>
+        </nav>
+    </header>
+    <main>
+        {% if messages %}
+        <ul class="messages">
+            {% for message in messages %}
+                <li{% if message.tags %} class="{{ message.tags }}"{% endif %}>{{ message }}</li>
+            {% endfor %}
+        </ul>
+        {% endif %}
         
-    </head>
-
-    <body>
-    </body>
-
+        {% block content %}
+        
+        {% endblock %}
+    </main>
     <footer>
+        <p>&copy; {% now "Y" %} Your Website Name</p>
+        <!-- Add footer content here -->
     </footer>
-
+    <!-- Add your JavaScript and other script includes here -->
+</body>
 </html>
