@@ -8,6 +8,7 @@ from django.contrib import messages
 from django.views.generic import CreateView, FormView, TemplateView
 from django.urls import reverse_lazy
 from .forms import CreateUserForm, LoginUserForm
+from .models import UserProfile
 
 
 # Create your views here.
@@ -32,7 +33,8 @@ class CreateUserView(CreateView):
     def post(self, request, *args, **kwargs):
         form = self.form_class(request.POST)
         if form.is_valid():
-            form.save()
+            user_profile = UserProfile.objects.create(owner=form.save())
+            user_profile.save()
             messages.success(request, "Registration succesful!")
             return HttpResponseRedirect(self.success_url)
         else:
@@ -75,3 +77,6 @@ class LogoutView(TemplateView):
             messages.error(request, "Invalid user!")
             return render(request, self.success_url)
 
+class UserProfileView():
+    #TODO
+    pass
